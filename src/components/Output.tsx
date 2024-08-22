@@ -53,15 +53,6 @@ const Output = ({ editorRef, language }:any) => {
     }
   };
 
-  // const getLanguages = async () =>{
-  //   const result = await axios.get("https://emkc.org/api/v2/piston/runtimes")
-
-  //   console.log(result)
-  // } 
-
-  // useEffect(()=>{
-  //   getLanguages();
-  // },[])
 
 
   return (
