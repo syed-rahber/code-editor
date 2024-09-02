@@ -9,7 +9,7 @@ import axios from 'axios'
 const CodeEditor = () => {
   
   const [value,setValue] = useState("");
-  const [language,setLanguage] = useState("javascript");
+  const [language,setLanguage] = useState("python");
   const editorRef = useRef();
 
   const [url,setUrl] = useState('')
@@ -26,18 +26,24 @@ const CodeEditor = () => {
     setValue(CODE_SNIPPETS[language])
   }
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get('https://dev-one.techademy.com/v1/compiler/random-urls');
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await axios.get('https://dev-one.techademy.com/v1/compiler/random-urls');
     
-      console.log('Response data:', response.data.URL);
-
-      setUrl(response.data.URL)
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      throw error;
-    }
-  };
+  //     console.log('Response data:', response.data.URL);
+  //     setUrl(response.data.URL)
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //     throw error;
+  //   }
+  // };
+  const options = {
+    scrollbar:{
+      verticalScrollbarSize: 5,
+      horizontalScrollbarSize: 5,
+    },
+    
+  }
 
 
   return (
@@ -53,10 +59,11 @@ const CodeEditor = () => {
       value={value}
       defaultValue={CODE_SNIPPETS[language]}
       onMount={onMount}
+      options={options}
       onChange={(value:any)=> setValue(value)}
       />
       
-   <Button
+   {/* <Button
    variant={"outline"}
    colorScheme='blue'
    mt={3}
@@ -67,9 +74,9 @@ const CodeEditor = () => {
     }
    >
   Generate URL
-   </Button>
+   </Button> */}
         </Box>    
-
+{/* 
    <Box w={"50%"} h={"82vh"} >
     <Text mb={10} fontSize={'large'}>Output</Text>
 
@@ -78,9 +85,8 @@ const CodeEditor = () => {
        </>}   
         </Box>
 
-       {/*
+     */}
        <Output editorRef={editorRef} language={language}/>
-       */} 
       </HStack>
    </Box>
     </>

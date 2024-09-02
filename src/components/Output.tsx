@@ -8,38 +8,44 @@ import { LANGUAGE_VERSIONS  } from "../constants";
 
 
 
-const API = axios.create({
-    baseURL: "https://emkc.org/api/v2/piston",
-  });
+// const API = axios.create({
+//     baseURL: "https://emkc.org/api/v2/piston",
+//   });
   
-  export const executeCode = async (language:any, sourceCode:any) => {
-    const response = await API.post("/execute", {
-      language: language,
-      version: LANGUAGE_VERSIONS[language],
-      files: [
-        {
-          content: sourceCode,
-        },
-      ],
+  export const executeCode = async (sourceCode:any) => {
+    const response = await axios.post("https://compiler.makemylabs.in/v1/compiler/exec-kube", {
+      code:sourceCode
     });
+    console.log(response.data)
     return response.data;
   };
 
 
 const Output = ({ editorRef, language }:any) => {
   const toast = useToast();
-  const [output, setOutput] = useState<any>(null);
+  const [url, setUrl] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+
+
+
+  const executeCode = async (sourceCode:any) => {
+    const response = await axios.post("https://compiler.makemylabs.in/v1/compiler/exec-kube", {
+      code:sourceCode
+    });
+    console.log(response.data)
+    setUrl(response.data.ttyd_url)
+    return response.data;
+  };
+
 
   const runCode = async () => {
     const sourceCode = editorRef.current.getValue();
     if (!sourceCode) return;
     try {
       setIsLoading(true);
-      const { run: result } = await executeCode(language, sourceCode);
-      setOutput(result.output.split("\n"));
-      result.stderr ? setIsError(true) : setIsError(false);
+      const result = await executeCode(sourceCode);
+      
     } catch (error:any) {
       console.log(error);
       toast({
@@ -57,13 +63,12 @@ const Output = ({ editorRef, language }:any) => {
 
   return (
     <Box w="50%">
-      <Text mb={2} fontSize="lg">
-        Output
-      </Text>
+      
       <Button
         variant="outline"
         colorScheme="green"
-        mb={4}
+        mt={4}
+        mb={5}
         isLoading={isLoading}
         onClick={runCode}
       >
@@ -77,9 +82,7 @@ const Output = ({ editorRef, language }:any) => {
         borderRadius={4}
         borderColor={isError ? "red.500" : "#333"}
       >
-        {output
-          ? output.map((line:any, i:any) => <Text key={i}>{line}</Text>)
-          : 'Click "Run Code" to see the output here'}
+        <iframe src={url} width={"100%"} height={"100%"}/>
       </Box>
     </Box>
   );
